@@ -16,7 +16,7 @@ public class Links : ModuleBase {
 
     [Command("link")]
     [Summary("A quick and easy way to share commonly used links :)")]
-    public async Task Link([Remainder()] string linkName) {
+    public async Task Link(string linkName) {
         var link = _links.SingleOrDefault(l => l.Name == linkName);
         if (link != null)
             await ReplyAsync(link.Url);
