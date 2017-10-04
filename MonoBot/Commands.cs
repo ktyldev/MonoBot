@@ -27,6 +27,18 @@ public class Links : ModuleBase {
     }
 }
 
+public class Google : ModuleBase {
+
+    private string _baseUrl = "http://lmgtfy.com/?q=";
+
+    [Command("google")]
+    [Summary("Let Me Google That For You")]
+    public async Task LMGTFY([Remainder] string query) {
+        await ReplyAsync(_baseUrl + query.Replace(' ', '+'));
+        await Context.Message.DeleteAsync();
+    }
+}
+
 public class Config {
     public List<Link> Links { get; set; }
 }
