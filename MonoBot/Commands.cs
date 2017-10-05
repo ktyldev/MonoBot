@@ -1,4 +1,6 @@
-﻿using Discord.Commands;
+﻿using Discord;
+using Discord.Commands;
+using Discord.WebSocket;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -27,15 +29,33 @@ public class Links : ModuleBase {
     }
 }
 
-public class Google : ModuleBase {
+public class Search : ModuleBase {
 
-    private string _baseUrl = "http://lmgtfy.com/?q=";
+    private string _lmgtfyUrl = "http://lmgtfy.com/?q=";
+    private string _googleUrl = "https://google.com/search?q=";
 
     [Command("google")]
+    [Summary("Google")]
+    public async Task Google([Remainder] string query) {
+        await ReplyAsync(_googleUrl + query.Replace(' ', '+'));
+        await Context.Message.DeleteAsync();
+    }
+
+    [Command("patronise")]
     [Summary("Let Me Google That For You")]
     public async Task LMGTFY([Remainder] string query) {
-        await ReplyAsync(_baseUrl + query.Replace(' ', '+'));
+        await ReplyAsync(_lmgtfyUrl + query.Replace(' ', '+'));
         await Context.Message.DeleteAsync();
+    }
+}
+
+public class SetGame : ModuleBase {
+    [Command("setgame")]
+    public async Task SetSelfGame([Remainder] string game) {
+        var client = Context.Client as DiscordSocketClient;
+
+        await client.SetGameAsync(game);
+        Console.WriteLine("Setting game: " + game);
     }
 }
 
