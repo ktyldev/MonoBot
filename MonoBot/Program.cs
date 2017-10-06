@@ -66,7 +66,7 @@ namespace MonoBot {
             if (!(message.HasCharPrefix(COMMAND_CHAR, ref argPos) || message.HasMentionPrefix(_client.CurrentUser, ref argPos)))
                 return;
 
-            Console.WriteLine("Running command!");
+            Console.WriteLine("Running command: " + message);
             var context = new CommandContext(_client, message);
             var result = await _commands.ExecuteAsync(context, argPos, _services);
 

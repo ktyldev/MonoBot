@@ -12,20 +12,50 @@ using System.Threading.Tasks;
 public class Links : ModuleBase {
 
     private string _configPath = "..\\..\\config.json";
-    
-    [Command("link")]
-    [Summary("A quick and easy way to share commonly used links :)")]
-    public async Task Link([Remainder] string linkName) {
-        var link = GetLinks().SingleOrDefault(l => l.Name == linkName);
-        if (link != null)
-            await ReplyAsync(link.Url);
+
+    [Command("addlink")]
+    [Summary("Add a link linkName:linkUrl")]
+    public async Task AddLink([Remainder] string linkDef) {
+        var splitChar = ';';
+
+        var args = linkDef.Split(splitChar);
+        if (args.Length != 2) {
+            Console.WriteLine("Incorrect number of arguments");
+            return;
+        }
+        
+        var config = GetConfig();
+        config.Links.Add(new Link {
+            Name = args[0],
+            Url = args[1]
+        });
+        SaveConfig(config);
 
         await Context.Message.DeleteAsync();
     }
 
-    private Link[] GetLinks() {
-        var config = JsonConvert.DeserializeObject<Config>(File.ReadAllText(_configPath));
-        return config.Links.ToArray();
+    [Command("link")]
+    [Summary("A quick and easy way to share commonly used links :)")]
+    public async Task Link([Remainder] string linkName) {
+        var link = GetConfig()
+            .Links
+            .SingleOrDefault(l => l.Name == linkName);
+
+        if (link != null) {
+            await ReplyAsync(link.Url);
+        } else {
+            Console.WriteLine("No link with name: " + linkName);
+        }
+
+        await Context.Message.DeleteAsync();
+    }
+
+    private Config GetConfig() {
+        return JsonConvert.DeserializeObject<Config>(File.ReadAllText(_configPath));
+    }
+
+    private void SaveConfig(Config config) {
+        File.WriteAllText(_configPath, JsonConvert.SerializeObject(config));
     }
 }
 
@@ -67,3 +97,4 @@ public class Link {
     public string Name { get; set; }
     public string Url { get; set; }
 }
+;
