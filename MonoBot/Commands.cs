@@ -13,40 +13,53 @@ public class Links : ModuleBase {
 
     private string _configPath = "..\\..\\config.json";
 
-    [Command("addlink")]
-    [Summary("Add a link linkName:linkUrl")]
-    public async Task AddLink([Remainder] string linkDef) {
+    [Command("addmacro")]
+    [Summary("Add a macro name;message")]
+    public async Task AddMacro([Remainder] string input) {
         var splitChar = ';';
 
-        var args = linkDef.Split(splitChar);
+        var args = input.Split(splitChar);
         if (args.Length != 2) {
             Console.WriteLine("Incorrect number of arguments");
             return;
         }
         
         var config = GetConfig();
-        config.Links.Add(new Link {
+        config.Macros.Add(new Macro {
             Name = args[0],
-            Url = args[1]
+            Message = args[1]
         });
         SaveConfig(config);
 
         await Context.Message.DeleteAsync();
     }
-
-    [Command("link")]
-    [Summary("A quick and easy way to share commonly used links :)")]
-    public async Task Link([Remainder] string linkName) {
-        var link = GetConfig()
-            .Links
+    
+    [Command("m")]
+    [Summary("Save a message under a macro")]
+    public async Task Macro([Remainder] string linkName) {
+        var macro = GetConfig()
+            .Macros
             .SingleOrDefault(l => l.Name == linkName);
 
-        if (link != null) {
-            await ReplyAsync(link.Url);
+        if (macro != null) {
+            await ReplyAsync(macro.Message);
         } else {
-            Console.WriteLine("No link with name: " + linkName);
+            Console.WriteLine("No link with name: {0}", linkName);
         }
 
+        await Context.Message.DeleteAsync();
+    }
+
+    [Command("payrespects")]
+    [Summary(":(")]
+    public async Task PayRespects() {
+        await Context.Message.DeleteAsync();
+        await ReplyAsync("F");
+    }
+
+    [Command("shrug")]
+    public async Task Shrug() {
+        await ReplyAsync(@"¯\_(ツ)_/¯");
         await Context.Message.DeleteAsync();
     }
 
@@ -90,11 +103,11 @@ public class SetGame : ModuleBase {
 }
 
 public class Config {
-    public List<Link> Links { get; set; }
+    public List<Macro> Macros { get; set; }
 }
 
-public class Link {
+public class Macro {
     public string Name { get; set; }
-    public string Url { get; set; }
+    public string Message { get; set; }
 }
 ;
