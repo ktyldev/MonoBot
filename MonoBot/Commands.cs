@@ -30,8 +30,7 @@ public class Links : ModuleBase {
             Message = args[1]
         });
         _Config = config;
-
-        await Context.Message.DeleteAsync();
+        await Task.CompletedTask;
     }
     
     [Command("m")]
@@ -41,13 +40,13 @@ public class Links : ModuleBase {
             .Macros
             .SingleOrDefault(l => l.Name == linkName);
 
-        if (macro != null) {
-            await ReplyAsync(macro.Message);
-        } else {
+        if (macro == null) {
             Console.WriteLine("No link with name: {0}", linkName);
+            await Task.CompletedTask;
+            return;
         }
 
-        await Context.Message.DeleteAsync();
+        await ReplyAsync(macro.Message);
     }
 
     [Command("payrespects")]
@@ -67,21 +66,20 @@ public class Links : ModuleBase {
 
 public class Search : ModuleBase {
 
-    private string _lmgtfyUrl = "http://lmgtfy.com/?q=";
-    private string _googleUrl = "https://google.com/search?q=";
-
+    private string _lmgtfyUrl = "http://lmgtfy.com/";
+    private string _googleUrl = "https://google.com/search";
+    
     [Command("google")]
-    [Summary("Google")]
     public async Task Google([Remainder] string query) {
-        await ReplyAsync(_googleUrl + query.Replace(' ', '+'));
-        await Context.Message.DeleteAsync();
+        await QueryTask(_googleUrl, query);
     }
 
     [Command("patronise")]
-    [Summary("Let Me Google That For You")]
     public async Task LMGTFY([Remainder] string query) {
-        await ReplyAsync(_lmgtfyUrl + query.Replace(' ', '+'));
-        await Context.Message.DeleteAsync();
+        await QueryTask(_lmgtfyUrl, query);
+    }
+    private async Task QueryTask(string url, string query) {
+        await ReplyAsync(url + String.Format("?q={0}", query.Replace(' ', '+')));
     }
 }
 

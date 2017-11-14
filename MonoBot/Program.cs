@@ -71,8 +71,10 @@ namespace MonoBot {
             var result = await _commands.ExecuteAsync(context, argPos, _services);
 
             if (!result.IsSuccess) {
-                await context.Channel.SendMessageAsync(result.ErrorReason);
+                Console.WriteLine(result.ErrorReason);
             }
+
+            await context.Message.DeleteAsync();
         }
     }
 }
