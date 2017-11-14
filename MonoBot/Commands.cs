@@ -57,12 +57,6 @@ public class Links : ModuleBase {
         await ReplyAsync("F");
     }
 
-    [Command("shrug")]
-    public async Task Shrug() {
-        await ReplyAsync(@"¯\_(ツ)_/¯");
-        await Context.Message.DeleteAsync();
-    }
-
     private Config GetConfig() {
         return JsonConvert.DeserializeObject<Config>(File.ReadAllText(_configPath));
     }
