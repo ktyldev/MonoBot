@@ -132,8 +132,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands.cs" />
+    <Compile Include="Config.cs" />
+    <Compile Include="Macro.cs" />
+    <Compile Include="Macros.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Search.cs" />
+    <Compile Include="Selfbot.cs" />
+    <Compile Include="SetGame.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
