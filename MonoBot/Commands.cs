@@ -24,12 +24,12 @@ public class Links : ModuleBase {
             return;
         }
         
-        var config = GetConfig();
+        var config = _Config;
         config.Macros.Add(new Macro {
             Name = args[0],
             Message = args[1]
         });
-        SaveConfig(config);
+        _Config = config;
 
         await Context.Message.DeleteAsync();
     }
@@ -37,7 +37,7 @@ public class Links : ModuleBase {
     [Command("m")]
     [Summary("Save a message under a macro")]
     public async Task Macro([Remainder] string linkName) {
-        var macro = GetConfig()
+        var macro = _Config
             .Macros
             .SingleOrDefault(l => l.Name == linkName);
 
@@ -57,12 +57,11 @@ public class Links : ModuleBase {
         await ReplyAsync("F");
     }
 
-    private Config GetConfig() {
-        return JsonConvert.DeserializeObject<Config>(File.ReadAllText(_configPath));
-    }
-
-    private void SaveConfig(Config config) {
-        File.WriteAllText(_configPath, JsonConvert.SerializeObject(config));
+    private Config _Config { get {
+            return JsonConvert.DeserializeObject<Config>(File.ReadAllText(_configPath));
+        } set {
+            File.WriteAllText(_configPath, JsonConvert.SerializeObject(value));
+        }
     }
 }
 
