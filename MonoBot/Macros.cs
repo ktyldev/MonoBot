@@ -50,7 +50,7 @@ public class Macros : ModuleBase {
             .SingleOrDefault(l => l.Name == linkName);
 
         if (macro == null) {
-            Console.WriteLine("No link with name: {0}", linkName);
+            Console.WriteLine("No macro with name: {0}", linkName);
             await Task.CompletedTask;
             return;
         }

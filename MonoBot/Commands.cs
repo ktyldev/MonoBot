@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 public class Commands {
 
-    private const char COMMAND_CHAR = '~';
+    private const char COMMAND_CHAR = '$';
 
     private DiscordSocketClient _client;
     private CommandService _commands;
