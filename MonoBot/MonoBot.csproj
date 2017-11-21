@@ -133,6 +133,7 @@
   <ItemGroup>
     <Compile Include="Commands.cs" />
     <Compile Include="Config.cs" />
+    <Compile Include="ConsoleLogger.cs" />
     <Compile Include="Macro.cs" />
     <Compile Include="Macros.cs" />
     <Compile Include="Program.cs" />

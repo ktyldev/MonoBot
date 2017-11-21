@@ -15,6 +15,7 @@ public class Commands {
     private DiscordSocketClient _client;
     private CommandService _commands;
     private IServiceProvider _services;
+    private ConsoleLogger _logger;
 
     public Commands(DiscordSocketClient client) {
         _commands = new CommandService();
@@ -24,6 +25,8 @@ public class Commands {
         _client.MessageReceived += HandleCommand;
 
         _services = new ServiceCollection().BuildServiceProvider();
+
+        _logger = new ConsoleLogger();
     }
     
     private async Task HandleCommand(SocketMessage socketMessage) {
@@ -36,12 +39,12 @@ public class Commands {
         if (!(message.HasCharPrefix(COMMAND_CHAR, ref argPos) || message.HasMentionPrefix(_client.CurrentUser, ref argPos)))
             return;
 
-        Console.WriteLine("Running command: " + message);
+        _logger.Log("Command", message.Content);
         var context = new CommandContext(_client, message);
         var result = await _commands.ExecuteAsync(context, argPos, _services);
 
         if (!result.IsSuccess) {
-            Console.WriteLine(result.ErrorReason);
+            _logger.Log("Failure", result.ErrorReason);
         }
 
         await context.Message.DeleteAsync();
