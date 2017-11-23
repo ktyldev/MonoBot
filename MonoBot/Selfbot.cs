@@ -8,15 +8,17 @@ using System.Threading.Tasks;
 
 public class Selfbot {
     private DiscordSocketClient _client;
+    private ConsoleLogger _log;
 
     public async Task MainAsync(string[] args) {
         Console.Title = "MonoBot";
 
+        _log = new ConsoleLogger();
         _client = new DiscordSocketClient();
-        var commands = new Commands(_client);
+        var commands = new Commands(_client, _log);
 
         _client.Log += m => {
-            Console.WriteLine(m.ToString());
+            _log.Log(m);
             return Task.CompletedTask;
         };
 
