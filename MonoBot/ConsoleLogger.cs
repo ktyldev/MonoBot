@@ -16,6 +16,7 @@ public class ConsoleLogger {
     }
 
     public void Log(string source, string message) {
-        Console.WriteLine("{0} {1}     {2}", DateTime.Now.ToLongTimeString(), source, message);
+        source = source.PadRight(15);
+        Console.WriteLine("{0} {1}{2}", DateTime.Now.ToLongTimeString(), source, message);
     }
 }
